@@ -6,9 +6,22 @@ import '../games/flappy_bird_game.dart';
 import '../games/dino_game.dart';
 import '../providers/theme_provider.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   final ThemeProvider themeProvider;
   const HomePage({super.key, required this.themeProvider});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  late final GameController _gameController;
+
+  @override
+  void initState() {
+    super.initState();
+    _gameController = GameController();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +35,9 @@ class HomePage extends StatelessWidget {
             actions: [
               IconButton(
                 icon: Icon(
-                  themeProvider.currentTheme == ThemeType.light
+                  widget.themeProvider.currentTheme == ThemeType.light
                       ? Icons.light_mode
-                      : themeProvider.currentTheme == ThemeType.dark
+                      : widget.themeProvider.currentTheme == ThemeType.dark
                       ? Icons.dark_mode
                       : Icons.brightness_auto,
                   color: Colors.white,
@@ -54,6 +67,8 @@ class HomePage extends StatelessWidget {
                   Image.asset(
                     'assets/images/background.png',
                     fit: BoxFit.cover,
+                    cacheWidth: 720,
+                    filterQuality: FilterQuality.low,
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
                         decoration: BoxDecoration(
@@ -95,18 +110,24 @@ class HomePage extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
             sliver: SliverList(
               delegate: SliverChildBuilderDelegate((context, index) {
-                final gameController = GameController();
-                final site = gameController.gameSites[index];
+                final site = _gameController.gameSites[index];
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 16),
                   child: GameSiteCard(
                     site: site,
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => GamePage(initialUrl: site.url)));
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (context, animation, secondaryAnimation) => GamePage(initialUrl: site.url),
+                          transitionDuration: const Duration(milliseconds: 300),
+                          reverseTransitionDuration: const Duration(milliseconds: 300),
+                        ),
+                      );
                     },
                   ),
                 );
-              }, childCount: GameController().gameSites.length),
+              }, childCount: _gameController.gameSites.length),
             ),
           ),
           // Offline Games Section
@@ -130,7 +151,7 @@ class HomePage extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => FlappyBirdGame(isCheatModeEnabled: themeProvider.isCheatModeEnabled)),
+                      MaterialPageRoute(builder: (context) => FlappyBirdGame(isCheatModeEnabled: widget.themeProvider.isCheatModeEnabled)),
                     );
                   },
                   child: Container(
@@ -187,7 +208,10 @@ class HomePage extends StatelessWidget {
                 child: InkWell(
                   borderRadius: BorderRadius.circular(16),
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => DinoGame(isCheatModeEnabled: themeProvider.isCheatModeEnabled)));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => DinoGame(isCheatModeEnabled: widget.themeProvider.isCheatModeEnabled)),
+                    );
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -253,34 +277,34 @@ class HomePage extends StatelessWidget {
                   ListTile(
                     leading: const Icon(Icons.light_mode),
                     title: const Text('Light'),
-                    trailing: themeProvider.currentTheme == ThemeType.light ? Icon(Icons.check, color: Theme.of(context).primaryColor) : null,
+                    trailing: widget.themeProvider.currentTheme == ThemeType.light ? Icon(Icons.check, color: Theme.of(context).primaryColor) : null,
                     onTap: () {
-                      themeProvider.setTheme(ThemeType.light);
+                      widget.themeProvider.setTheme(ThemeType.light);
                       Navigator.pop(context);
                     },
                   ),
                   ListTile(
                     leading: const Icon(Icons.dark_mode),
                     title: const Text('Dark'),
-                    trailing: themeProvider.currentTheme == ThemeType.dark ? Icon(Icons.check, color: Theme.of(context).primaryColor) : null,
+                    trailing: widget.themeProvider.currentTheme == ThemeType.dark ? Icon(Icons.check, color: Theme.of(context).primaryColor) : null,
                     onTap: () {
-                      themeProvider.setTheme(ThemeType.dark);
+                      widget.themeProvider.setTheme(ThemeType.dark);
                       Navigator.pop(context);
                     },
                   ),
                   ListTile(
                     leading: const Icon(Icons.brightness_auto),
                     title: const Text('System'),
-                    trailing: themeProvider.currentTheme == ThemeType.system ? Icon(Icons.check, color: Theme.of(context).primaryColor) : null,
+                    trailing: widget.themeProvider.currentTheme == ThemeType.system ? Icon(Icons.check, color: Theme.of(context).primaryColor) : null,
                     onTap: () {
-                      themeProvider.setTheme(ThemeType.system);
+                      widget.themeProvider.setTheme(ThemeType.system);
                       Navigator.pop(context);
                     },
                   ),
-                  Divider(height: 24, color: themeProvider.isCheatModeEnabled ? Colors.green : Colors.greenAccent),
+                  Divider(height: 24, color: widget.themeProvider.isCheatModeEnabled ? Colors.green : Colors.greenAccent),
                   InkWell(
                     onTap: () {
-                      themeProvider.toggleCheatMode();
+                      widget.themeProvider.toggleCheatMode();
                       setState(() {});
                     },
                     child: Container(
@@ -293,9 +317,9 @@ class HomePage extends StatelessWidget {
                           Expanded(
                             flex: 1,
                             child: Switch(
-                              value: themeProvider.isCheatModeEnabled,
+                              value: widget.themeProvider.isCheatModeEnabled,
                               onChanged: (value) {
-                                themeProvider.toggleCheatMode();
+                                widget.themeProvider.toggleCheatMode();
                                 setState(() {});
                               },
                               activeThumbColor: Colors.transparent,

@@ -20,14 +20,18 @@ class _GambitAppState extends State<GambitApp> {
   void initState() {
     super.initState();
     _themeProvider = ThemeProvider();
-    _themeProvider.addListener(() {
+    _themeProvider.addListener(_onThemeChanged);
+  }
+
+  void _onThemeChanged() {
+    if (mounted) {
       setState(() {});
-    });
+    }
   }
 
   @override
   void dispose() {
-    _themeProvider.removeListener(() {});
+    _themeProvider.removeListener(_onThemeChanged);
     _themeProvider.dispose();
     super.dispose();
   }

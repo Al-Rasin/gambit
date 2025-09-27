@@ -37,6 +37,9 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
   @override
   void dispose() {
     _animationController.dispose();
+    // Clear WebView cache to free memory
+    _controller.clearCache();
+    _controller.clearLocalStorage();
     super.dispose();
   }
 
@@ -100,6 +103,8 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setUserAgent('Mozilla/5.0 (Linux; Android 10; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36')
+      ..setBackgroundColor(Colors.black)
+      ..enableZoom(false)
       ..setNavigationDelegate(
         NavigationDelegate(
           onNavigationRequest: (NavigationRequest request) {
