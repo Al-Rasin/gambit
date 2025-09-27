@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'pages/home_page.dart';
+import 'pages/splash_screen.dart';
 import 'providers/theme_provider.dart';
 
 void main() {
@@ -40,7 +40,7 @@ class _GambitAppState extends State<GambitApp> {
       darkTheme: ThemeProvider.darkTheme,
       themeMode: _themeProvider.themeMode,
       debugShowCheckedModeBanner: false,
-      home: HomePage(themeProvider: _themeProvider),
+      home: SplashScreen(themeProvider: _themeProvider),
     );
   }
 }
