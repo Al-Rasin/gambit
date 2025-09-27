@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import '../controllers/game_controller.dart';
-import '../widgets/game_site_card.dart';
-import 'game_page.dart';
+import 'game_sites_page.dart';
 import '../games/flappy_bird_game.dart';
 import '../games/dino_game.dart';
 import '../providers/theme_provider.dart';
@@ -15,14 +13,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late final GameController _gameController;
-
-  @override
-  void initState() {
-    super.initState();
-    _gameController = GameController();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,38 +86,122 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
 
-          // Online Games Section
+          // Online Browser Section
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
             sliver: SliverToBoxAdapter(
               child: Text(
-                'Online Games',
+                'Online Gaming Browser',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.headlineMedium?.color),
               ),
             ),
           ),
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate((context, index) {
-                final site = _gameController.gameSites[index];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: GameSiteCard(
-                    site: site,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        PageRouteBuilder(
-                          pageBuilder: (context, animation, secondaryAnimation) => GamePage(initialUrl: site.url),
-                          transitionDuration: const Duration(milliseconds: 300),
-                          reverseTransitionDuration: const Duration(milliseconds: 300),
-                        ),
-                      );
-                    },
+            sliver: SliverToBoxAdapter(
+              child: Card(
+                elevation: 6,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(20),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const GameSitesPage()),
+                    );
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Colors.deepPurple.shade400,
+                          Colors.blue.shade600,
+                        ],
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.2),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: const Icon(
+                                  Icons.public,
+                                  size: 36,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Open Gaming Browser',
+                                      style: TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      'Full browser with login support',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.white.withValues(alpha: 0.9),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Icon(
+                                Icons.arrow_forward_ios,
+                                color: Colors.white.withValues(alpha: 0.8),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: [
+                              'CrazyGames',
+                              'Poki',
+                              'Cool Math',
+                              'Y8',
+                              'Friv'
+                            ].map((site) => Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.2),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                site,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white.withValues(alpha: 0.95),
+                                ),
+                              ),
+                            )).toList(),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                );
-              }, childCount: _gameController.gameSites.length),
+                ),
+              ),
             ),
           ),
           // Offline Games Section

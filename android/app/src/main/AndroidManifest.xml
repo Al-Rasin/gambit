@@ -47,5 +47,22 @@
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
         </intent>
+        <!-- For launching URLs in browser -->
+        <intent>
+            <action android:name="android.intent.action.VIEW"/>
+            <data android:scheme="https"/>
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW"/>
+            <data android:scheme="http"/>
+        </intent>
+        <!-- Chrome Custom Tabs support -->
+        <intent>
+            <action android:name="android.support.customtabs.action.CustomTabsService"/>
+        </intent>
+        <!-- Browser packages -->
+        <package android:name="com.android.chrome"/>
+        <package android:name="org.mozilla.firefox"/>
+        <package android:name="com.microsoft.emmx"/>
     </queries>
 </manifest>

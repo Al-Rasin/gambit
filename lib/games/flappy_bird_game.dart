@@ -278,7 +278,7 @@ class _FlappyBirdGameState extends State<FlappyBirdGame> with TickerProviderStat
 
             // Game area
             Center(
-              child: Container(
+              child: SizedBox(
                 width: double.infinity,
                 height: MediaQuery.of(context).size.height - 200,
                 child: Stack(
